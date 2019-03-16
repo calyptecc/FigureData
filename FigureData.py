@@ -106,58 +106,55 @@ def translate_xy(x, y):
     
     return xval, yval
     
-def go(figure_file='Brammer11_Fig7.png', output_file='plot.data'):
-    """
-    Run the full script
-    """
 
-    ### G is global container instantiated at import
-    G.xdata = []
-    G.ydata = []
-    G.output_file = output_file
-    
-    ### Display the plot
-    im = Image.open(figure_file)
-    
-    fig = plt.figure(figsize=(8,8.*im.size[0]/im.size[1]))
-    fig.subplots_adjust(left=0.02, bottom=0.02, right=1-0.02, top=1-0.02)
-            
-    ax = fig.add_subplot(111)
-    G.ax = ax
-    
-    ax.imshow(im, aspect='auto', origin='lower')
-    ax.set_xticks([0,im.size[0]]); ax.set_yticks([0,im.size[1]])
-    ax.set_xlim([0,im.size[0]]); ax.set_ylim([0,im.size[1]])
-    ax.set_xticklabels([]); ax.set_yticklabels([])
-    
-    plt.show()
-    
-    ### Add "click" listener to the plot
-    cid = fig.canvas.mpl_connect('button_press_event', onclick)
+figure_file='Brammer11_Fig7.png'
+output_file='plot.data'
 
-    ### Define -x- axis
-    xticks = ''
-    xticks = input('\n == Click two positions along the -x- axis and enter the tick coordinates here (e.g., 0,1): ')
-    G.xrange = list(np.cast[float](xticks.split(',')))
+### G is global container instantiated at import
+G.xdata = []
+G.ydata = []
+G.output_file = output_file
 
-    ### Define -y- axis
-    yticks = input('\n == Click two positions along the -y- axis and enter the tick coordinates here (e.g., 0,1): ')
-    G.yrange = list(np.cast[float](yticks.split(',')))
-    
-    ### Define the full plot window
-    full = input('\n ==  Now mark the ll and ur corners of the plot axes. <Enter> when done. ')
-    
-    G.xpix = G.xdata[0:2]
-    G.ypix = G.ydata[2:4]
-    G.ll = [G.xdata[4], G.ydata[4]]
-    G.ur = [G.xdata[5], G.ydata[5]]
-    xmin, ymin = translate_xy(G.ll[0], G.ll[1])
-    xmax, ymax = translate_xy(G.ur[0], G.ur[1])
-    print(f'\n Plot window: x={xmin},{xmax}, y={ymin},{ymax} \n')
-    
-    print("""\n == Now mark as many data points as you like.  
+### Display the plot
+im = Image.open(figure_file)
+im = im.transpose(Image.FLIP_TOP_BOTTOM)
+
+fig = plt.figure(figsize=(8,8.*im.size[0]/im.size[1]))
+fig.subplots_adjust(left=0.02, bottom=0.02, right=1-0.02, top=1-0.02)      
+ax = fig.add_subplot(111)
+G.ax = ax
+
+ax.imshow(im, aspect='auto', origin='lower')
+ax.set_xticks([0,im.size[0]]); ax.set_yticks([0,im.size[1]])
+ax.set_xlim([0,im.size[0]]); ax.set_ylim([0,im.size[1]])
+ax.set_xticklabels([]); ax.set_yticklabels([])
+plt.pause(0.1)
+plt.draw()
+
+### Add "click" listener to the plot
+cid = fig.canvas.mpl_connect('button_press_event', onclick)
+
+### Define -x- axis
+xticks = ''
+xticks = input('\n == Click two positions along the -x- axis and enter the tick coordinates here (e.g., 0,1): ')
+G.xrange = list(np.cast[float](xticks.split(',')))
+
+### Define -y- axis
+yticks = input('\n == Click two positions along the -y- axis and enter the tick coordinates here (e.g., 0,1): ')
+G.yrange = list(np.cast[float](yticks.split(',')))
+
+### Define the full plot window
+full = input('\n ==  Now mark the ll and ur corners of the plot axes. <Enter> when done. ')
+
+G.xpix = G.xdata[0:2]
+G.ypix = G.ydata[2:4]
+G.ll = [G.xdata[4], G.ydata[4]]
+G.ur = [G.xdata[5], G.ydata[5]]
+xmin, ymin = translate_xy(G.ll[0], G.ll[1])
+xmax, ymax = translate_xy(G.ur[0], G.ur[1])
+print(f'\n Plot window: x={xmin},{xmax}, y={ymin},{ymax} \n')
+
+print("""\n == Now mark as many data points as you like.  
  == Click outside the plot window to save the `output_file`.
  """)
-    done = input('\n== <ENTER> when done.\n')
-    
-    
+done = input('\n== <ENTER> when done.\n')
