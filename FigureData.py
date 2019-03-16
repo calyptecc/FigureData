@@ -31,9 +31,14 @@ script prompts for the user to mark points on the figure defining the plot regio
 
 G.Brammer - Jan. 22, 2014
 """
+
+# =============================================================================
+# READ THIS: https://matplotlib.org/users/shell.html
+# =============================================================================
 import matplotlib.pyplot as plt
+from time import sleep
 import numpy as np
-import Image
+from PIL import Image
 
 class Globals():
     """
@@ -115,37 +120,39 @@ def go(figure_file='Brammer11_Fig7.png', output_file='plot.data'):
     G.xdata = []
     G.ydata = []
     G.output_file = output_file
-    
-    ### Display the plot
+
     im = Image.open(figure_file)
-    
-    fig = plt.figure(figsize=(8,8.*im.size[0]/im.size[1]))
+    #plt.ion()
+    fig = plt.figure()
     fig.subplots_adjust(left=0.02, bottom=0.02, right=1-0.02, top=1-0.02)
-            
     ax = fig.add_subplot(111)
-    G.ax = ax
+    #G.ax = ax
     
     ax.imshow(im, aspect='auto', origin='lower')
     ax.set_xticks([0,im.size[0]]); ax.set_yticks([0,im.size[1]])
     ax.set_xlim([0,im.size[0]]); ax.set_ylim([0,im.size[1]])
     ax.set_xticklabels([]); ax.set_yticklabels([])
-    
+    plt.pause(0.1)
     plt.draw()
-    
+
     ### Add "click" listener to the plot
     cid = fig.canvas.mpl_connect('button_press_event', onclick)
 
     ### Define -x- axis
     xticks = ''
     xticks = raw_input('\n == Click two positions along the -x- axis and enter the tick coordinates here (e.g., 0,1): ')
+    print('OK')
     G.xrange = list(np.cast[float](xticks.split(',')))
 
     ### Define -y- axis
     yticks = raw_input('\n == Click two positions along the -y- axis and enter the tick coordinates here (e.g., 0,1): ')
     G.yrange = list(np.cast[float](yticks.split(',')))
-    
+    print(G.xdata)
+    print(G.ydata)
+
     ### Define the full plot window
     full = raw_input('\n ==  Now mark the ll and ur corners of the plot axes. <Enter> when done. ')
+
     
     G.xpix = G.xdata[0:2]
     G.ypix = G.ydata[2:4]
@@ -158,6 +165,7 @@ def go(figure_file='Brammer11_Fig7.png', output_file='plot.data'):
     print """\n == Now mark as many data points as you like.  
  == Click outside the plot window to save the `output_file`.
  """
-    done = raw_input('\n== <ENTER> when done.\n')
+#    done = raw_input('\n== <ENTER> when done.\n')
     
     
+
