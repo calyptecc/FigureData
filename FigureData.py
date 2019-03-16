@@ -33,7 +33,7 @@ G.Brammer - Jan. 22, 2014
 """
 import matplotlib.pyplot as plt
 import numpy as np
-import Image
+from PIL import Image
 
 class Globals():
     """
@@ -80,7 +80,7 @@ def onclick(event):
             fp.write('%f %f %d\n' %(xval, yval, inplot*1))
         
         fp.close()
-        print 'Saved to %s.' %(G.output_file)
+        print(f'Saved to {G.output_file}.')
         
     else:
         #print 'button=%d, x=%d, y=%d, xdata=%f, ydata=%f'%(event.button, event.x, event.y, event.xdata, event.ydata)
@@ -88,11 +88,11 @@ def onclick(event):
         G.ydata.append(event.ydata)
         #
         if len(G.xdata) < 7:
-            print '< mark >'
+            print('< mark >')
 
         if len(G.xdata) > 6:
             xval, yval = translate_xy(G.xdata[-1], G.ydata[-1])
-            print 'Mark [%f,%f]' %(xval, yval)
+            print(f'Mark {xval, yval}')
             G.ax.scatter(G.xdata[-1], G.ydata[-1], marker='o', color='white', s=40, alpha=0.7)
             G.ax.scatter(G.xdata[-1], G.ydata[-1], marker='o', color='red', s=20, alpha=0.7)
             plt.draw()
@@ -130,22 +130,22 @@ def go(figure_file='Brammer11_Fig7.png', output_file='plot.data'):
     ax.set_xlim([0,im.size[0]]); ax.set_ylim([0,im.size[1]])
     ax.set_xticklabels([]); ax.set_yticklabels([])
     
-    plt.draw()
+    plt.show()
     
     ### Add "click" listener to the plot
     cid = fig.canvas.mpl_connect('button_press_event', onclick)
 
     ### Define -x- axis
     xticks = ''
-    xticks = raw_input('\n == Click two positions along the -x- axis and enter the tick coordinates here (e.g., 0,1): ')
+    xticks = input('\n == Click two positions along the -x- axis and enter the tick coordinates here (e.g., 0,1): ')
     G.xrange = list(np.cast[float](xticks.split(',')))
 
     ### Define -y- axis
-    yticks = raw_input('\n == Click two positions along the -y- axis and enter the tick coordinates here (e.g., 0,1): ')
+    yticks = input('\n == Click two positions along the -y- axis and enter the tick coordinates here (e.g., 0,1): ')
     G.yrange = list(np.cast[float](yticks.split(',')))
     
     ### Define the full plot window
-    full = raw_input('\n ==  Now mark the ll and ur corners of the plot axes. <Enter> when done. ')
+    full = input('\n ==  Now mark the ll and ur corners of the plot axes. <Enter> when done. ')
     
     G.xpix = G.xdata[0:2]
     G.ypix = G.ydata[2:4]
@@ -153,11 +153,11 @@ def go(figure_file='Brammer11_Fig7.png', output_file='plot.data'):
     G.ur = [G.xdata[5], G.ydata[5]]
     xmin, ymin = translate_xy(G.ll[0], G.ll[1])
     xmax, ymax = translate_xy(G.ur[0], G.ur[1])
-    print '\n Plot window:  x=[%f,%f], y=[%f,%f] \n' %(xmin, xmax, ymin, ymax)
+    print(f'\n Plot window: x={xmin},{xmax}, y={ymin},{ymax} \n')
     
-    print """\n == Now mark as many data points as you like.  
+    print("""\n == Now mark as many data points as you like.  
  == Click outside the plot window to save the `output_file`.
- """
-    done = raw_input('\n== <ENTER> when done.\n')
+ """)
+    done = input('\n== <ENTER> when done.\n')
     
     
